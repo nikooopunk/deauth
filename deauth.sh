@@ -96,6 +96,25 @@ function aireplay(){
 
 }
 
+function showConection(){
+clear
+# Banner
+echo -e "\n${redColour}  ██████  ▒█████   ███▄    █ ▓█████▄  ▄▄▄      ${endColour}"
+echo -e "${redColour}▒██    ▒ ▒██▒  ██▒ ██ ▀█   █ ▒██▀ ██▌▒████▄    ${endColour}"
+echo -e "${redColour}░ ▓██▄   ▒██░  ██▒▓██  ▀█ ██▒░██   █▌▒██  ▀█▄  ${endColour}"
+echo -e "${redColour}  ▒   ██▒▒██   ██░▓██▒  ▐▌██▒░▓█▄   ▌░██▄▄▄▄██ ${endColour}"
+echo -e "${redColour}▒██████▒▒░ ████▓▒░▒██░   ▓██░░▒████▓  ▓█   ▓██▒${endColour}"
+echo -e "${redColour}▒ ▒▓▒ ▒ ░░ ▒░▒░▒░ ░ ▒░   ▒ ▒  ▒▒▓  ▒  ▒▒   ▓▒█░${endColour}"
+echo -e "${redColour}░ ░▒  ░ ░  ░ ▒ ▒░ ░ ░░   ░ ▒░ ░ ▒  ▒   ▒   ▒▒ ░${endColour}"
+echo -e "${redColour}░  ░  ░  ░ ░ ░ ▒     ░   ░ ░  ░ ░  ░   ░   ▒   ${endColour}"
+echo -e "${redColour}      ░      ░ ░           ░    ░          ░  ░${endColour}"
+echo -e "${redColour}                              ░                ${endColour}"
+
+echo -e "\n${yellowColour}[+]${endColour}${blueColour} Estas conectado a la red:${endColour}${yellowColour} $(nmcli connection show | grep -v '\-\-' | grep -v 'lo' | awk -F '    ' '{print $1}' | tail -n +2)${endColour}"
+sleep 3
+menuPrincipal
+}
+
 function menuPrincipal(){
 
 clear
@@ -117,7 +136,8 @@ echo -e "\t${yellowColour}[2]${endColour}${blueColour} Listar redes wifi disponi
 echo -e "\t${yellowColour}[3]${endColour}${blueColour} Escanear redes con airodump-ng${endColour}"
 echo -e "\t${yellowColour}[4]${endColour}${blueColour} Escanear una red especifica con airodump-ng${endColour}"
 echo -e "\t${yellowColour}[5]${endColour}${blueColour} Enviar paquetes de desauntenticacion con aireplay-ng${endColour}"
-echo -e "\t${yellowColour}[6]${endColour}${blueColour} salir.${endColour}"
+echo -e "\t${yellowColour}[6]${endColour}${blueColour} Mostrar coneccion actual."
+echo -e "\t${yellowColour}[7]${endColour}${blueColour} salir.${endColour}"
 echo -ne "${yellowColour}[i]${endColour}${blueColour} Seleccione una opcion: ${endColour}" && read opc1
 
 case $opc1 in
@@ -126,7 +146,8 @@ case $opc1 in
 	3) airodump-ng;;
 	4) airodump-ng2;;
 	5) aireplay;;
-	6) exit 0;;
+	6) showConection;;
+	7) exit 0;;
 esac
 
 }
