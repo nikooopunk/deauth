@@ -115,6 +115,31 @@ sleep 3
 menuPrincipal
 }
 
+function conectarse(){
+#echo -e "${redColour}[!]${endColour}${blueColour} No disponible aun."
+#sleep 3
+#menuPrincipal
+echo -e "${yellowColour}[+]${endColour}${blueColour} Listando redes wifi disponibles: ${endCOlour}"
+nmcli device wifi list | grep -v '*' | tail -n +2 | awk -F '  ' '{print "\033[0;33m[+]\033[0m" "\033[0;32m", $6,"\033[0m"}'
+echo -ne "${yellowColour}[+]${endColour}${blueColour} Ingrese el nombre de la red wifi: ${endColour}" && read redWifiConectar
+echo -ne "${yellowColour}[+]${endColour}${blueColour} Ingrese la contraseña de la red wifi: ${endColour}" && read passwordWifi
+nmcli device wifi connect $redWifiConectar password $passwordWifi
+if [ $(echo $?) == 0 ]; then
+	echo -e "${greenColour}[+]${endColour}${blueColour} Red conectada con exito!${endColour}"
+else
+	echo -e "${redColour}[!]${endColour}${blueColour} Ha ocurrido un error al intentar conectarse a la red.${endColour}"
+	echo -e "${redColour}[!]${endColour}${blueColour} Ha ocurrido un error al intentar conectarse a la red.${endColour}"
+fi
+}
+
+function redesWifiDisponibles(){
+clear
+echo -e "${yellowColour}[+]${endColour}${blueColour} Listando redes wifi disponibles: ${endColour}"
+echo -e "$(nmcli device wifi list | grep -v '*' | tail -n +2 | awk -F '  ' '{print "\033[0;33m[" NR "]\033[0m" "\033[0;32m", $6,"\033[0m"}')"
+sleep 20
+menuPrincipal
+}
+
 function menuPrincipal(){
 
 clear
@@ -137,17 +162,19 @@ echo -e "\t${yellowColour}[3]${endColour}${blueColour} Escanear redes con airodu
 echo -e "\t${yellowColour}[4]${endColour}${blueColour} Escanear una red especifica con airodump-ng${endColour}"
 echo -e "\t${yellowColour}[5]${endColour}${blueColour} Enviar paquetes de desauntenticacion con aireplay-ng${endColour}"
 echo -e "\t${yellowColour}[6]${endColour}${blueColour} Mostrar coneccion actual."
-echo -e "\t${yellowColour}[7]${endColour}${blueColour} salir.${endColour}"
+echo -e "\t${yellowColour}[7]${endColour}${blueColour} Conectarse a una red wifi.${endColour}"
+echo -e "\t${yellowColour}[8]${endColour}${blueColour} salir.${endColour}"
 echo -ne "${yellowColour}[i]${endColour}${blueColour} Seleccione una opcion: ${endColour}" && read opc1
 
 case $opc1 in
 	1) clear; configTargMon;;
-	2) gnome-terminal -- bash -c "nmcli device wifi list";menuPrincipal ;;
+	2) redesWifiDisponibles ;;
 	3) airodump-ng;;
 	4) airodump-ng2;;
 	5) aireplay;;
 	6) showConection;;
-	7) exit 0;;
+	7) conectarse;;
+	8) exit 0;;
 esac
 
 }
